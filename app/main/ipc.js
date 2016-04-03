@@ -14,12 +14,14 @@ export default {
       if (app.hasPlugins()) {
         // iterate through plugins
         const plugins = app.getPlugins();
-        plugins.forEach((plugin) => {
-          // call the plugin's search method
-          // and set it as the results
-          // TODO: needs to append to a results list instead
-          results = plugin.search(args.q);
-        });
+        if (plugins && plugins.length) {
+          plugins.forEach((plugin) => {
+            // call the plugin's search method
+            // and set it as the results
+            // TODO: needs to append to a results list instead
+            results = plugin.search(args.q);
+          });
+        }
       }
       evt.sender.send(IPC_SEARCH_REPLY, results);
     });

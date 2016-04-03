@@ -2,14 +2,15 @@ import path from 'path';
 import co from 'co';
 import readdirp from 'readdirp';
 import fuzzy from 'fuzzy';
-import { flatten } from 'lodash';
-import { Result } from '../../app/models';
+import { flatten, values } from 'lodash';
+import { Plugin, Result } from '../../app/models';
+import extensions from './extensions';
 
-export default class FileSearchPlugin {
-  constructor() {
+export default class FileSearchPlugin extends Plugin {
+  constructor(options) {
+    super(options);
     this.name = 'File Search';
     this.desc = 'Sample desc....';
-    this.results = [];
     // lookup files
     const INDEX_PATHS = [
       path.resolve(process.env.USERPROFILE, 'Projects'),
@@ -63,7 +64,7 @@ export default class FileSearchPlugin {
       // create a stream to read recursively
       const stream = readdirp({
         root: filePath,
-        fileFilter: ['*.exe', '*js', '*.json', '*.php', '*.html', '*.md', '*.doc', '*.xls', '*.xlsx', '*.ppt', '*.pdf', '*.txt'],
+        fileFilter: flatten(values(extensions)),
       });
       stream
         // add entry on data stream

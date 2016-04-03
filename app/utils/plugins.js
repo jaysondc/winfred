@@ -9,7 +9,7 @@ import readdirp from 'readdirp';
  * @return ReaddirpReadable       The readable stream
  */
 export function getPlugins(pluginsPath) {
-  return readdirp({ root: pluginsPath, fileFilter: '*.js' });
+  return readdirp({ root: pluginsPath, fileFilter: 'index.js', depth: 1 });
 }
 
 /**
@@ -19,8 +19,14 @@ export function getPlugins(pluginsPath) {
  * @return bool
  */
 export function validatePlugin(plugin) {
-  if (isFunction(plugin.search)) {
-    return true;
+  if (typeof plugin.name !== 'string') {
+    return false;
   }
-  return false;
+  if (!plugin.name.length) {
+    return false;
+  }
+  if (!isFunction(plugin.search)) {
+    return false;
+  }
+  return true;
 }

@@ -11,10 +11,13 @@ config.entry = {
     path.resolve(__dirname, 'app', 'renderer', 'index.js'),
   ],
   vendor: [
+    'co',
+    'fuzzy',
     'lodash',
     'react',
     'react-dom',
     'react-redux',
+    'readdirp',
     'redux',
     'redux-thunk',
   ],

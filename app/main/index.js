@@ -35,13 +35,16 @@ export default function main(appContext) {
   const stream = getPlugins(appContext.pluginsPath);
   stream.on('data', (entry) => {
     // checks if plugin implements the plugins API
-    const Plugin = require(entry.fullPath).default;
-    // creates the plugin instance
-    const pluginInstance = new Plugin();
-    // if it's a valid plugin
-    if (validatePlugin(pluginInstance)) {
-      // loads the plugin
-      appContext.loadPlugin(pluginInstance);
+    const CurrentPlugin = require(entry.fullPath).default;
+    // if the module is a function
+    if (typeof CurrentPlugin === 'function') {
+      // creates the plugin instance
+      const pluginInstance = new CurrentPlugin();
+      // if it's a valid plugin
+      if (validatePlugin(pluginInstance)) {
+        // loads the plugin
+        appContext.loadPlugin(pluginInstance);
+      }
     }
   });
 
