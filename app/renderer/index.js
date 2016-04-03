@@ -41,7 +41,7 @@ ReactDOM.render(
 );
 
 // start registering listeners
-ipc.on(IPC_RELOAD_WEB_CONTENT, (evt) => {
+ipc.on(IPC_RELOAD_WEB_CONTENT, () => {
   store.dispatch(resetQuery());
   store.dispatch(resetResults());
 });

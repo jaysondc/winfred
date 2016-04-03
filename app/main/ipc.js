@@ -1,8 +1,6 @@
-import { ipcMain } from 'electron';
-import { IPC_CONNECT, IPC_DISCONNECT, IPC_SEARCH, IPC_SEARCH_REPLY } from '../const/ipc';
-
-let appContext = null;
-let connectedClient = null;
+import { shell, ipcMain } from 'electron';
+import { hideWindow } from './window';
+import { IPC_SEARCH, IPC_SEARCH_REPLY, IPC_EXECUTE } from '../const/ipc';
 
 export default {
   /**
@@ -11,24 +9,12 @@ export default {
    * @param object app
    */
   connect: (app) => {
-    // sets the app context
-    appContext = app;
-
-    // start registering listeners
-    ipcMain.on(IPC_CONNECT, (evt) => {
-      connectedClient = evt.sender;
-    });
-
-    ipcMain.on(IPC_DISCONNECT, () => {
-      connectedClient = null;
-    });
-
     ipcMain.on(IPC_SEARCH, (evt, args) => {
       let results = null;
-      if (appContext.hasPlugins()) {
+      if (app.hasPlugins()) {
         // iterate through plugins
-        const plugins = appContext.getPlugins();
-        plugins.map((plugin) => {
+        const plugins = app.getPlugins();
+        plugins.forEach((plugin) => {
           // call the plugin's search method
           // and set it as the results
           // TODO: needs to append to a results list instead
@@ -36,6 +22,13 @@ export default {
         });
       }
       evt.sender.send(IPC_SEARCH_REPLY, results);
+    });
+
+    ipcMain.on(IPC_EXECUTE, (evt, result) => {
+      // open the item via the shell
+      shell.openItem(result.data.fullPath);
+      // closes the main window
+      hideWindow(app.mainWindow);
     });
   },
 

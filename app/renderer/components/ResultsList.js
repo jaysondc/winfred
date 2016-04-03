@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
-import ResultItem from './ResultItem';
+import ResultItemContainer from '../containers/ResultItemContainer';
+import { Result } from '../../models';
 
 const styles = {
   base: {
@@ -12,7 +13,7 @@ const styles = {
 };
 
 const ResultsList = ({ results }) => {
-  const itemsHtml = results.map(item => <ResultItem item={item} />);
+  const itemsHtml = results.map((item, key) => <ResultItemContainer key={key} item={item} />);
   return (
     <ol style={styles.base}>
       {itemsHtml}
@@ -21,7 +22,7 @@ const ResultsList = ({ results }) => {
 };
 
 ResultsList.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.object),
+  results: PropTypes.arrayOf(PropTypes.instanceOf(Result)),
 };
 
 export default ResultsList;

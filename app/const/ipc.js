@@ -1,5 +1,4 @@
-export const IPC_CONNECT = 'IPC_CONNECT';
-export const IPC_DISCONNECT = 'IPC_DISCONNECT';
 export const IPC_SEARCH = 'IPC_SEARCH';
 export const IPC_SEARCH_REPLY = 'IPC_SEARCH_REPLY';
 export const IPC_RELOAD_WEB_CONTENT = 'IPC_RELOAD_WEB_CONTENT';
+export const IPC_EXECUTE = 'IPC_EXECUTE';

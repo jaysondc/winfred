@@ -69,6 +69,10 @@ export default function main(appContext) {
     if (process.env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools();
     }
+
+    // set to app context
+    appContext.setMainWindow(mainWindow);
+    appContext.setTray(tray);
   });
 
   // minimizes to tray when the window is closed

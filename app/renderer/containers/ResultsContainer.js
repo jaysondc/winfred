@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ResultsList from '../components/ResultsList';
+import { Result } from '../../models';
 
 const ResultsContainer = class ResultsContainer extends Component {
   render() {
@@ -12,7 +13,7 @@ const ResultsContainer = class ResultsContainer extends Component {
 
 
 ResultsContainer.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.object),
+  results: PropTypes.arrayOf(PropTypes.instanceOf(Result)),
 };
 
 export default ResultsContainer;

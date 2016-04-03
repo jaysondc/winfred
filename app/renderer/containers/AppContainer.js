@@ -4,25 +4,26 @@ import { connect } from 'react-redux';
 import { updateQuery, updateResults, resetResults } from '../actions';
 import ipc from '../ipc';
 import { IPC_SEARCH, IPC_SEARCH_REPLY } from '../../const/ipc';
-
+import { Result } from '../../models';
 import QueryFieldContainer from '../containers/QueryFieldContainer';
 import ResultsContainer from '../containers/ResultsContainer';
 
 const AppContainer = class AppContainer extends Component {
   componentDidMount() {
     this.search = throttle(this.search, 100);
-    // connects the renderer stub
-    ipc.connect();
+    // listen for search replies
     ipc.on(IPC_SEARCH_REPLY, (evt, results) => {
       this.props.dispatch(updateResults(results));
     });
   }
 
   render() {
+    const { results } = this.props;
+    const resultsContainerHtml = results.length ? <ResultsContainer results={results} /> : '';
     return (
       <div>
         <QueryFieldContainer onChange={::this.handleChange} />
-        {this.props.results && <ResultsContainer results={this.props.results} />}
+        {resultsContainerHtml}
       </div>
     );
   }
@@ -59,7 +60,7 @@ const mapStateToProps = (state) => ({
 AppContainer.propTypes = {
   dispatch: PropTypes.func,
   q: PropTypes.string,
-  results: PropTypes.arrayOf(PropTypes.object),
+  results: PropTypes.arrayOf(PropTypes.instanceOf(Result)),
 };
 
 export default connect(mapStateToProps)(AppContainer);

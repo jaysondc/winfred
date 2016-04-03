@@ -1,12 +1,9 @@
 import { ipcRenderer } from 'electron';
-import { IPC_CONNECT, IPC_DISCONNECT, IPC_RELOAD_WEB_CONTENT } from '../const/ipc';
+import { IPC_EXECUTE } from '../const/ipc';
 
 export default {
-  connect: () => {
-    ipcRenderer.send(IPC_CONNECT);
-  },
-  disconnect: () => {
-    ipcRenderer.send(IPC_DISCONNECT);
+  execute: (item) => {
+    ipcRenderer.send(IPC_EXECUTE, item);
   },
 
   // inherited

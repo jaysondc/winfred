@@ -2,40 +2,79 @@ import path from 'path';
 import co from 'co';
 import readdirp from 'readdirp';
 import fuzzy from 'fuzzy';
+import { flatten } from 'lodash';
+import { Result } from '../../app/models';
 
 export default class FileSearchPlugin {
   constructor() {
-    const self = this;
     this.name = 'File Search';
     this.desc = 'Sample desc....';
     this.results = [];
     // lookup files
-    const DIR_TO_READ = path.resolve(process.env.USERPROFILE, 'Desktop');
-    co(function* () {
-      // lookup the results and set it
-      self.results = yield self.lookup(DIR_TO_READ);
-    }).catch((err) => {
-      console.log(err);
-      console.log(err.stack);
-    });
+    const INDEX_PATHS = [
+      path.resolve(process.env.USERPROFILE, 'Projects'),
+      path.resolve(process.env.USERPROFILE, 'Applications'),
+      // path.resolve(process.env.USERPROFILE),
+      // path.resolve(process.env.PROGRAMFILES),
+      // path.resolve(process.env['ProgramFiles(x86)']),
+    ];
+    co(this.refresh(INDEX_PATHS));
   }
 
+  /**
+   * @param string q
+   * @return array
+   */
   search(q) {
     if (this.results && this.results.length) {
       // fuzzy filter results by name
-      return fuzzy.filter(q, this.results, { extract: item => item.name });
+      const filtered = fuzzy.filter(q, this.results, { extract: item => item.title });
+      return filtered.slice(0, 10).map(item => {
+        // get the original item
+        const result = item.original;
+        // set the score
+        result.score = item.score;
+        return result;
+      });
     }
+    return [];
   }
 
-  lookup(path) {
+  /**
+   * Refreshes and index the list of paths
+   *
+   * @param array indexPaths
+   */
+  * refresh(indexPaths) {
+    const promises = indexPaths.map(p => this.lookup(p));
+    const results = yield Promise.all(promises);
+    this.results = flatten(results);
+  }
+
+  /**
+   * Looks up a single path
+   *
+   * @param array filePath       A path to look up
+   * @return Promise
+   */
+  lookup(filePath) {
     return new Promise((resolve, reject) => {
       const results = [];
       // create a stream to read recursively
-      const stream = readdirp({ root: path });
+      const stream = readdirp({
+        root: filePath,
+        fileFilter: ['*.exe', '*js', '*.json', '*.php', '*.html', '*.md', '*.doc', '*.xls', '*.xlsx', '*.ppt', '*.pdf', '*.txt'],
+      });
       stream
         // add entry on data stream
         .on('data', (entry) => {
-          results.push(entry);
+          results.push(new Result({
+            icon: '', // TODO: create node add-on for retrieving associated icon
+            title: entry.name,
+            subtitle: entry.fullPath,
+            desc: entry.fullPath,
+            data: entry,
+          }));
         })
         // reject on error
         .on('error', reject)
