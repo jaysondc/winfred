@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Result } from '../../models';
 
 const styles = {
   base: {

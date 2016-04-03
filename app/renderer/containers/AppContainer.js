@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { updateQuery, updateResults, resetResults } from '../actions';
 import ipc from '../ipc';
 import { IPC_SEARCH, IPC_SEARCH_REPLY } from '../../const/ipc';
-import { Result } from '../../models';
 import QueryFieldContainer from '../containers/QueryFieldContainer';
 import ResultsContainer from '../containers/ResultsContainer';
 
@@ -61,7 +60,7 @@ AppContainer.propTypes = {
   dispatch: PropTypes.func,
   q: PropTypes.string,
   results: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.instanceOf(Result)),
+    PropTypes.arrayOf(PropTypes.object),
     PropTypes.array,
   ]),
 };

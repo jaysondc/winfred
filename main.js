@@ -1,4 +1,5 @@
 import path from 'path';
+import { cloneDeep } from 'lodash';
 import main from './app/main';
 
 // creates the winfred context
@@ -13,11 +14,18 @@ const winfred = {
 /**
  * Loads the plugin
  *
- * @param object plugin       The plugin instance
+ * @param int id                     The plugin ID
+ * @param object plugin              The plugin object
+ * @param string plugin.name         Name of the plugin
+ * @param string plugin.desc         Description of the plugin
+ * @param function plugin.search     Search callback function
+ * @param function plugin.execute    Result execution callback function
  */
-winfred.loadPlugin = (plugin) => {
+winfred.loadPlugin = (id, plugin) => {
+  const p = cloneDeep(plugin);
+  p.id = id;
   // append to list
-  winfred.plugins = Object.assign([], winfred.plugins, [plugin]);
+  winfred.plugins = winfred.plugins.concat([p]);
 };
 
 /**
@@ -33,6 +41,17 @@ winfred.hasPlugins = () => winfred.plugins && winfred.plugins.length;
  * @return array
  */
 winfred.getPlugins = () => winfred.plugins;
+
+/**
+ * Retrieves the plugin by it's ID
+ *
+ * @param int id
+ * @return object|null
+ */
+winfred.getPluginById = id => {
+  const filtered = winfred.plugins.filter(plugin => id === plugin.id);
+  return filtered.length ? filtered[0] : null;
+};
 
 /**
  * Sets the main app instance
@@ -81,6 +100,18 @@ winfred.setTray = tray => {
  * @return Tray
  */
 winfred.getTray = () => winfred.tray;
+
+
+// Plugin API
+winfred.createPlugin = (plugin) => {
+  // retrieve the current plugin index
+  const currIndex = winfred.plugins.length;
+  const pluginId = currIndex + 1;
+  winfred.loadPlugin(pluginId, plugin);
+};
+
+// Main Process Proxies
+winfred.getPath = (...args) => winfred.getApp().getPath(...args);
 
 // boot up the main process
 main(winfred);

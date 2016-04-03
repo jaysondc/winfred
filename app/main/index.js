@@ -2,7 +2,7 @@ import path from 'path';
 import { isFunction } from 'lodash';
 import { app } from 'electron';
 import { globalShortcut } from 'electron';
-import { getPlugins, validatePlugin } from '../utils/plugins';
+import { getPlugins } from '../utils/plugins';
 import { createWindow, toggleWindow, showWindow, hideWindow } from './window';
 import { createTray } from './tray';
 import ipc from './ipc';
@@ -36,16 +36,10 @@ export default function main(appContext) {
   const stream = getPlugins(appContext.pluginsPath);
   stream.on('data', (entry) => {
     // checks if plugin implements the plugins API
-    const CurrentPlugin = require(entry.fullPath).default;
-    // if the module is a function
-    if (isFunction(CurrentPlugin)) {
-      // creates the plugin instance
-      const pluginInstance = new CurrentPlugin({ app: appContext.app });
-      // if it's a valid plugin
-      if (validatePlugin(pluginInstance)) {
-        // loads the plugin
-        appContext.loadPlugin(pluginInstance);
-      }
+    const currentPlugin = require(entry.fullPath).default;
+    if (isFunction(currentPlugin)) {
+      // initialize the plugin and pass the app context
+      currentPlugin(appContext);
     }
   });
 

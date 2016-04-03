@@ -1,5 +1,6 @@
-import { shell, ipcMain } from 'electron';
+import { ipcMain } from 'electron';
 import { hideWindow } from './window';
+import { wrapResults } from '../utils/plugins';
 import { IPC_SEARCH, IPC_SEARCH_REPLY, IPC_EXECUTE } from '../const/ipc';
 
 export default {
@@ -10,16 +11,17 @@ export default {
    */
   connect: (app) => {
     ipcMain.on(IPC_SEARCH, (evt, args) => {
-      let results = null;
+      let results = [];
       if (app.hasPlugins()) {
         // iterate through plugins
         const plugins = app.getPlugins();
         if (plugins && plugins.length) {
           plugins.forEach((plugin) => {
-            // call the plugin's search method
-            // and set it as the results
-            // TODO: needs to append to a results list instead
-            results = plugin.search(args.q);
+            // call the plugin's search method and append to the current results
+            const searchResults = wrapResults(plugin.id, plugin.search(args.q.trim()));
+            if (searchResults && searchResults.length) {
+              results = results.concat(searchResults);
+            }
           });
         }
       }
@@ -27,8 +29,8 @@ export default {
     });
 
     ipcMain.on(IPC_EXECUTE, (evt, result) => {
-      // open the item via the shell
-      shell.openItem(result.data.fullPath);
+      // call the associated plugin's execution function
+      app.getPluginById(result.pluginId).execute(result);
       // closes the main window
       hideWindow(app.mainWindow);
     });

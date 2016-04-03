@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import ResultItemContainer from '../containers/ResultItemContainer';
-import { Result } from '../../models';
 
 const styles = {
   base: {
@@ -26,7 +25,7 @@ const ResultsList = ({ results }) => {
 
 ResultsList.propTypes = {
   results: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.instanceOf(Result)),
+    PropTypes.arrayOf(PropTypes.object),
     PropTypes.array,
   ]),
 };

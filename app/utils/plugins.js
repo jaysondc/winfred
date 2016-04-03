@@ -1,5 +1,5 @@
-import { isFunction } from 'lodash';
 import readdirp from 'readdirp';
+import { cloneDeep } from 'lodash';
 
 /**
  * Retrieve plugins for the given path and returns a stream
@@ -13,20 +13,20 @@ export function getPlugins(pluginsPath) {
 }
 
 /**
- * Checks and validates the plugin instance
+ * Given a list of results, appends the plugin ID
  *
- * @param object plugin     The plugin instance
- * @return bool
+ * @param int pluginId      The plugin ID associated with the results
+ * @param list results      A list of results
+ * @return array            An array of the transformed results
  */
-export function validatePlugin(plugin) {
-  if (typeof plugin.name !== 'string') {
-    return false;
-  }
-  if (!plugin.name.length) {
-    return false;
-  }
-  if (!isFunction(plugin.search)) {
-    return false;
-  }
-  return true;
+export function wrapResults(id, results) {
+  // create a new array
+  const newResults = results.map(result => {
+    // clone into a new result
+    const transformedResult = cloneDeep(result);
+    // set the plugin's ID
+    transformedResult.pluginId = id;
+    return transformedResult;
+  });
+  return newResults;
 }
