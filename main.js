@@ -3,7 +3,7 @@ import main from './app/main';
 
 // creates the winfred context
 const winfred = {
-  main: null, // the main app/process module
+  app: null, // the main app/process module
   mainWindow: null, // the BrowserWindow instance
   tray: null, // the tray instance
   pluginsPath: path.resolve(__dirname, 'plugins'), // the path to the plugins directory
@@ -16,6 +16,7 @@ const winfred = {
  * @param object plugin       The plugin instance
  */
 winfred.loadPlugin = (plugin) => {
+  // append to list
   winfred.plugins = Object.assign([], winfred.plugins, [plugin]);
 };
 
@@ -32,6 +33,22 @@ winfred.hasPlugins = () => winfred.plugins && winfred.plugins.length;
  * @return array
  */
 winfred.getPlugins = () => winfred.plugins;
+
+/**
+ * Sets the main app instance
+ *
+ * @param app
+ */
+winfred.setApp = app => {
+  winfred.app = app;
+};
+
+/**
+ * Retrieves the main app instance
+ *
+ * @return app
+ */
+winfred.getApp = () => winfred.app;
 
 /**
  * Sets the main BrowserWindow instance
@@ -66,4 +83,4 @@ winfred.setTray = tray => {
 winfred.getTray = () => winfred.tray;
 
 // boot up the main process
-winfred.main = main(winfred);
+main(winfred);

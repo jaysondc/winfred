@@ -70,7 +70,7 @@ const ResultItem = class ResultItem extends Component {
 };
 
 ResultItem.propTypes = {
-  item: PropTypes.instanceOf(Result),
+  item: PropTypes.object,
   onDoubleClick: PropTypes.func,
 };
 

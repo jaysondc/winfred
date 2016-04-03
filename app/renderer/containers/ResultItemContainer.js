@@ -19,7 +19,7 @@ const ResultItemContainer = class ResultItemContainer extends Component {
 };
 
 ResultItemContainer.propTypes = {
-  item: PropTypes.instanceOf(Result),
+  item: PropTypes.object,
 };
 
 export default ResultItemContainer;

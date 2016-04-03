@@ -7,7 +7,10 @@ const ResultsContainer = ({ results }) => (
 );
 
 ResultsContainer.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.instanceOf(Result)),
+  results: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.instanceOf(Result)),
+    PropTypes.array,
+  ]),
 };
 
 export default ResultsContainer;

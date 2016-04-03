@@ -1,6 +1,7 @@
 /*eslint-disable*/
 
 // wraps the main entry point into babel-register
+const debug = require('debug')('winfred');
 require('babel-register');
 require('babel-polyfill');
 require('./main');
@@ -9,14 +10,14 @@ require('./main');
 require('dotenv').load();
 
 if (process.env.NODE_ENV === "development") {
-  var path = require('path');
-  var express = require('express');
-  var webpack = require('webpack');
-  var webpackDevMiddleware = require('webpack-dev-middleware');
-  var webpackHotMiddleware = require('webpack-hot-middleware');
-  var config = require('./webpack.config.dev').default;
-  var compiler = webpack(config);
-  var app = express();
+  const path = require('path');
+  const express = require('express');
+  const webpack = require('webpack');
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webpackHotMiddleware = require('webpack-hot-middleware');
+  const config = require('./webpack.config.dev').default;
+  const compiler = webpack(config);
+  const app = express();
 
   // Attach webpack-dev-middleware and webpack-hot-middleware
   app.use(webpackDevMiddleware(compiler, Object.assign({}, config, {
@@ -30,6 +31,6 @@ if (process.env.NODE_ENV === "development") {
 
   // start server
   app.listen(4000, (err, result) => {
-    console.log('HMR running on port 4000.');
+    debug('HMR running on port 4000.');
   })
 }

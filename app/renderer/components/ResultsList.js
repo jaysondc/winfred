@@ -13,7 +13,10 @@ const styles = {
 };
 
 const ResultsList = ({ results }) => {
-  const itemsHtml = results.map((item, key) => <ResultItemContainer key={key} item={item} />);
+  let itemsHtml = '';
+  if (results.length) {
+    itemsHtml = results.map((item, key) => <ResultItemContainer key={key} item={item} />);
+  }
   return (
     <ol style={styles.base}>
       {itemsHtml}
@@ -22,7 +25,10 @@ const ResultsList = ({ results }) => {
 };
 
 ResultsList.propTypes = {
-  results: PropTypes.arrayOf(PropTypes.instanceOf(Result)),
+  results: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.instanceOf(Result)),
+    PropTypes.array,
+  ]),
 };
 
 export default ResultsList;

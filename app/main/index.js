@@ -1,4 +1,5 @@
 import path from 'path';
+import { isFunction } from 'lodash';
 import { app } from 'electron';
 import { globalShortcut } from 'electron';
 import { getPlugins, validatePlugin } from '../utils/plugins';
@@ -37,9 +38,9 @@ export default function main(appContext) {
     // checks if plugin implements the plugins API
     const CurrentPlugin = require(entry.fullPath).default;
     // if the module is a function
-    if (typeof CurrentPlugin === 'function') {
+    if (isFunction(CurrentPlugin)) {
       // creates the plugin instance
-      const pluginInstance = new CurrentPlugin();
+      const pluginInstance = new CurrentPlugin({ app: appContext.app });
       // if it's a valid plugin
       if (validatePlugin(pluginInstance)) {
         // loads the plugin
@@ -74,6 +75,7 @@ export default function main(appContext) {
     }
 
     // set to app context
+    appContext.setApp(app);
     appContext.setMainWindow(mainWindow);
     appContext.setTray(tray);
   });

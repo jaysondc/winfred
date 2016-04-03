@@ -60,7 +60,10 @@ const mapStateToProps = (state) => ({
 AppContainer.propTypes = {
   dispatch: PropTypes.func,
   q: PropTypes.string,
-  results: PropTypes.arrayOf(PropTypes.instanceOf(Result)),
+  results: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.instanceOf(Result)),
+    PropTypes.array,
+  ]),
 };
 
 export default connect(mapStateToProps)(AppContainer);
