@@ -46,7 +46,11 @@ const ResultItem = class ResultItem extends Component {
       itemStyle = Object.assign({}, styles.base, styles.active);
     }
     return (
-      <li style={itemStyle} onDoubleClick={onDoubleClick} onMouseOver={::this.handleMouseOver} onMouseOut={::this.handleMouseOut}>
+      <li style={itemStyle}
+        onDoubleClick={onDoubleClick}
+        onMouseOver={::this.handleMouseOver}
+        onMouseOut={::this.handleMouseOut}
+      >
         <div style={styles.icon}><img src={item.icon} style={styles.icon} /></div>
         <div style={styles.info}>
           <div style={styles.title}>{item.title}</div>

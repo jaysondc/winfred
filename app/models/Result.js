@@ -5,6 +5,7 @@ export default class Result {
       subtitle: '',
       desc: '',
       icon: '',
+      score: 0,
       data: null,
     };
     // merge properties

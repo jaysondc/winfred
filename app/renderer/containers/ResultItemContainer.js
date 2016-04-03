@@ -13,7 +13,6 @@ const ResultItemContainer = class ResultItemContainer extends Component {
 
   handleDoubleClick(e) {
     e.preventDefault();
-    console.log('execute:', this.props.item);
     // execute this item
     ipc.execute(this.props.item);
   }
