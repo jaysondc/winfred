@@ -59,7 +59,7 @@ export default function main(appContext) {
     mainWindow.loadURL(`file://${indexFile}`);
 
     // hides the window on blur
-    mainWindow.on('blur', hideWindow.bind(appContext, mainWindow));
+    mainWindow.on('blur', () => hideWindow.bind(appContext, mainWindow));
 
     // set to app context
     appContext.setApp(app);

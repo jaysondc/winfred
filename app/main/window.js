@@ -27,6 +27,26 @@ export function createWindow(width, height) {
 }
 
 /**
+ * Collapses the main window
+ *
+ * @context The application context
+ * @param BrowserWindow mainWindow
+ */
+export function collapseWindow(mainWindow) {
+  mainWindow.setSize(this.size[0], this.size[1]);
+}
+
+/**
+ * Expands the main window
+ *
+ * @context The application context
+ * @param BrowserWindow mainWindow
+ */
+export function expandWindow(mainWindow) {
+  mainWindow.setSize(this.size[0], this.size[1] + 500);
+}
+
+/**
  * Hides the window and resets the query
  *
  * @context The application context
@@ -34,6 +54,8 @@ export function createWindow(width, height) {
  */
 export function hideWindow(mainWindow) {
   mainWindow.hide();
+  // collapses the window
+  collapseWindow.bind(this)(mainWindow);
   // sends the signal to reload the web content
   mainWindow.webContents.send(IPC_RELOAD_WEB_CONTENT);
 }
@@ -56,8 +78,8 @@ export function showWindow(mainWindow) {
  */
 export function toggleWindow(mainWindow) {
   if (mainWindow.isVisible()) {
-    hideWindow(mainWindow);
+    hideWindow.bind(this)(mainWindow);
   } else {
-    showWindow(mainWindow);
+    showWindow.bind(this)(mainWindow);
   }
 }

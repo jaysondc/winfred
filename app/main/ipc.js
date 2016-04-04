@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import { hideWindow } from './window';
+import { hideWindow, collapseWindow, expandWindow } from './window';
 import { wrapResults } from '../utils/plugins';
 import {
   IPC_SEARCH,
@@ -39,15 +39,15 @@ export default {
       // call the associated plugin's execution function
       app.getPluginById(result.pluginId).execute(result);
       // closes the main window
-      hideWindow(app.getMainWindow());
+      hideWindow.bind(app)(app.getMainWindow());
     });
 
     ipcMain.on(IPC_SEARCH_COLLAPSE_WINDOW, () => {
-      app.getMainWindow().setSize(app.size[0], app.size[1]);
+      collapseWindow.bind(app)(app.getMainWindow());
     });
 
     ipcMain.on(IPC_SEARCH_EXPAND_WINDOW, () => {
-      app.getMainWindow().setSize(app.size[0], app.size[1] + 500);
+      expandWindow.bind(app)(app.getMainWindow());
     });
   },
 
