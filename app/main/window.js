@@ -17,8 +17,12 @@ export function createWindow(width, height) {
     show: false,
     minimizable: false,
     maximizable: false,
-    resizable: false,
+    resizable: true,
+    skipTaskbar: true,
   });
+  // move up a little bit to off-set for results
+  const pos = win.getPosition();
+  win.setPosition(pos[0], pos[1] - 200);
   return win;
 }
 

@@ -13,8 +13,19 @@ html, body {
 
 <div id="app"></div>
 
-<script type="text/javascript" language="javascript" src="http://localhost:4000/vendor.bundle.js"></script>
-<script type="text/javascript" language="javascript" src="http://localhost:4000/bundle.js"></script>
+<script type="text/javascript" language="javascript">
+(function(environment) {
+  const path = require('path');
+  // dynamically inject the bundles
+  const hostname = environment === 'development' ? 'http://localhost:4000' : path.resolve(__dirname, '..', 'dist');
+  const vendorBundle = document.createElement('script');
+  const mainBundle = document.createElement('script');
+  vendorBundle.src = hostname + '/vendor.bundle.js';
+  mainBundle.src = hostname + '/bundle.js';
+  document.write(vendorBundle.outerHTML);
+  document.write(mainBundle.outerHTML);
+}(process.env.NODE_ENV));
+</script>
 
 </body>
 

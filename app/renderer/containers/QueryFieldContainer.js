@@ -6,11 +6,10 @@ const styles = {
     width: '100%',
     height: '100%',
     border: '0px',
-    fontSize: '32px',
+    fontSize: '35px',
+    lineHeight: '35px',
     fontWeight: 'normal',
-    padding: '5px',
     outline: '0px',
-    boxSizing: 'border-box',
   },
 };
 

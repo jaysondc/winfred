@@ -62,6 +62,7 @@
     "babel-register": "^6.7.2",
     "debug": "^2.2.0",
     "dotenv": "^2.0.0",
+    "electron-packager": "^6.0.0",
     "electron-prebuilt": "^0.36.0",
     "eslint": "^2.5.3",
     "eslint-config-airbnb": "^6.2.0",
@@ -78,8 +79,10 @@
   },
   "scripts": {
     "lint": "eslint app",
-    "hmr": "node bootstrap.js",
+    "compile": "babel-node tools/compile",
+    "package": "babel-node tools/package",
     "dev": "electron bootstrap.js --enable-logging",
+    "build": "npm run compile && npm run package",
     "start": "npm run dev"
   }
 }

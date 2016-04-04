@@ -44,11 +44,8 @@ export default function main(appContext) {
   });
 
   app.on('ready', () => {
-    const WINDOW_WIDTH = process.env.NODE_ENV === 'development' ? 900 : 900;
-    const WINDOW_HEIGHT = process.env.NODE_ENV === 'development' ? 900 : 300;
-
     // create the window object
-    mainWindow = createWindow.bind(appContext)(WINDOW_WIDTH, WINDOW_HEIGHT);
+    mainWindow = createWindow.bind(appContext)(appContext.size[0], appContext.size[1]);
 
     // register the default key bindings
     globalShortcut.register('alt+space', toggleWindow.bind(appContext, mainWindow));
@@ -63,10 +60,6 @@ export default function main(appContext) {
 
     // hides the window on blur
     mainWindow.on('blur', hideWindow.bind(appContext, mainWindow));
-
-    if (process.env.NODE_ENV === 'development') {
-      mainWindow.webContents.openDevTools();
-    }
 
     // set to app context
     appContext.setApp(app);

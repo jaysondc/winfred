@@ -4,6 +4,7 @@ import main from './app/main';
 
 // creates the winfred context
 const winfred = {
+  size: [900, 70], // the size of the query box
   app: null, // the main app/process module
   mainWindow: null, // the BrowserWindow instance
   tray: null, // the tray instance

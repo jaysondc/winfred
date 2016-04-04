@@ -1,7 +1,13 @@
 import { ipcMain } from 'electron';
 import { hideWindow } from './window';
 import { wrapResults } from '../utils/plugins';
-import { IPC_SEARCH, IPC_SEARCH_REPLY, IPC_EXECUTE } from '../const/ipc';
+import {
+  IPC_SEARCH,
+  IPC_SEARCH_REPLY,
+  IPC_EXECUTE,
+  IPC_SEARCH_COLLAPSE_WINDOW,
+  IPC_SEARCH_EXPAND_WINDOW,
+} from '../const/ipc';
 
 export default {
   /**
@@ -25,6 +31,7 @@ export default {
           });
         }
       }
+      // emit the search reply event
       evt.sender.send(IPC_SEARCH_REPLY, results);
     });
 
@@ -32,7 +39,15 @@ export default {
       // call the associated plugin's execution function
       app.getPluginById(result.pluginId).execute(result);
       // closes the main window
-      hideWindow(app.mainWindow);
+      hideWindow(app.getMainWindow());
+    });
+
+    ipcMain.on(IPC_SEARCH_COLLAPSE_WINDOW, () => {
+      app.getMainWindow().setSize(app.size[0], app.size[1]);
+    });
+
+    ipcMain.on(IPC_SEARCH_EXPAND_WINDOW, () => {
+      app.getMainWindow().setSize(app.size[0], app.size[1] + 500);
     });
   },
 
