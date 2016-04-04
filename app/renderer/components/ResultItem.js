@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 
 const styles = {
   base: {
@@ -33,44 +33,30 @@ const styles = {
   },
 };
 
-const ResultItem = class ResultItem extends Component {
-  componentWillMount() {
-    this.setState({ isActive: false });
+const ResultItem = ({ item, selected, onDoubleClick, onMouseOver }) => {
+  let itemStyle = styles.base;
+  if (selected) {
+    itemStyle = Object.assign({}, styles.base, styles.active);
   }
-
-  render() {
-    const { item, onDoubleClick } = this.props;
-    let itemStyle = styles.base;
-    if (this.state.isActive) {
-      itemStyle = Object.assign({}, styles.base, styles.active);
-    }
-    return (
-      <li style={itemStyle}
-        onDoubleClick={onDoubleClick}
-        onMouseOver={::this.handleMouseOver}
-        onMouseOut={::this.handleMouseOut}
-      >
-        <div style={styles.icon}><img src={item.icon} style={styles.icon} /></div>
-        <div style={styles.info}>
-          <div style={styles.title}>{item.title}</div>
-          <div style={styles.subtitle}>{item.subtitle}</div>
-        </div>
-      </li>
-    );
-  }
-
-  handleMouseOver() {
-    this.setState({ isActive: true });
-  }
-
-  handleMouseOut() {
-    this.setState({ isActive: false });
-  }
+  return (
+    <li style={itemStyle}
+      onDoubleClick={onDoubleClick}
+      onMouseOver={onMouseOver}
+    >
+      <div style={styles.icon}><img src={item.icon} style={styles.icon} /></div>
+      <div style={styles.info}>
+        <div style={styles.title}>{item.title}</div>
+        <div style={styles.subtitle}>{item.subtitle}</div>
+      </div>
+    </li>
+  );
 };
 
 ResultItem.propTypes = {
   item: PropTypes.object,
+  selected: PropTypes.boolean,
   onDoubleClick: PropTypes.func,
+  onMouseOver: PropTypes.func,
 };
 
 export default ResultItem;

@@ -11,10 +11,13 @@ const styles = {
   },
 };
 
-const ResultsList = ({ results }) => {
+const ResultsList = ({ results, selectedIndex }) => {
   let itemsHtml = '';
   if (results.length) {
-    itemsHtml = results.map((item, key) => <ResultItemContainer key={key} item={item} />);
+    itemsHtml = results.map((item, key) => {
+      const selected = key === selectedIndex;
+      return <ResultItemContainer key={key} id={key} item={item} selected={selected} />;
+    });
   }
   return (
     <ol style={styles.base}>
@@ -28,6 +31,7 @@ ResultsList.propTypes = {
     PropTypes.arrayOf(PropTypes.object),
     PropTypes.array,
   ]),
+  selectedIndex: PropTypes.number,
 };
 
 export default ResultsList;

@@ -7,6 +7,11 @@ import { createWindow, toggleWindow, showWindow, hideWindow } from './window';
 import { createTray } from './tray';
 import { createDb } from './db';
 import ipc from './ipc';
+import {
+  IPC_RESULT_PREVIOUS_ITEM,
+  IPC_RESULT_NEXT_ITEM,
+  IPC_RESULT_EXECUTE_ITEM,
+} from '../const/ipc';
 
 /**
  * @param object appContext    The application context
@@ -48,9 +53,14 @@ export default function main(appContext) {
   app.on('ready', () => {
     // create the window object
     mainWindow = createWindow.bind(appContext)(appContext.size[0], appContext.size[1]);
+    const mwc = mainWindow.webContents;
 
     // register the default key bindings
     globalShortcut.register('alt+space', toggleWindow.bind(appContext, mainWindow));
+    globalShortcut.register('esc', hideWindow.bind(appContext, mainWindow));
+    globalShortcut.register('up', () => { mwc.send(IPC_RESULT_PREVIOUS_ITEM); });
+    globalShortcut.register('down', () => { mwc.send(IPC_RESULT_NEXT_ITEM); });
+    globalShortcut.register('enter', () => { mwc.send(IPC_RESULT_EXECUTE_ITEM); });
 
     // creates a tray
     tray = createTray(path.resolve(__dirname, '..', 'icon.png'));

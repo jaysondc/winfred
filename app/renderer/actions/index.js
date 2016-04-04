@@ -1,8 +1,11 @@
 // Action Types
-export const UPDATE_QUERY = 'QUUPDATE_QUERYERY';
+export const UPDATE_QUERY = 'UPDATE_QUERY';
 export const RESET_QUERY = 'RESET_QUERY';
 export const UPDATE_RESULTS = 'UPDATE_RESULTS';
 export const RESET_RESULTS = 'RESET_RESULTS';
+export const SELECT_PREVIOUS_ITEM = 'SELECT_PREVIOUS_ITEM';
+export const SELECT_NEXT_ITEM = 'SELECT_NEXT_ITEM';
+export const SELECT_ITEM = 'SELECT_ITEM';
 
 // Action Creators
 export function updateQuery(q) {
@@ -19,4 +22,16 @@ export function updateResults(results) {
 
 export function resetResults() {
   return { type: RESET_RESULTS };
+}
+
+export function selectPreviousItem() {
+  return { type: SELECT_PREVIOUS_ITEM };
+}
+
+export function selectNextItem() {
+  return { type: SELECT_NEXT_ITEM };
+}
+
+export function selectItem(key) {
+  return { type: SELECT_ITEM, key };
 }
