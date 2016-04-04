@@ -5,6 +5,7 @@ import { globalShortcut } from 'electron';
 import { getPlugins } from '../utils/plugins';
 import { createWindow, toggleWindow, showWindow, hideWindow } from './window';
 import { createTray } from './tray';
+import { createDb } from './db';
 import ipc from './ipc';
 
 /**
@@ -14,6 +15,7 @@ export default function main(appContext) {
   // create placeholders
   let mainWindow = null;
   let tray = null;
+  let db = null;
 
   // make a single instance of the app
   const shouldQuit = app.makeSingleInstance(() => {
@@ -54,6 +56,9 @@ export default function main(appContext) {
     tray = createTray(path.resolve(__dirname, '..', 'icon.png'));
     tray.on('click', toggleWindow.bind(appContext, mainWindow));
 
+    // create the db
+    db = createDb(appContext.dataPath);
+
     // load the index.html
     const indexFile = path.resolve(__dirname, '..', 'index.html');
     mainWindow.loadURL(`file://${indexFile}`);
@@ -65,6 +70,7 @@ export default function main(appContext) {
     appContext.setApp(app);
     appContext.setMainWindow(mainWindow);
     appContext.setTray(tray);
+    appContext.setDb(db);
   });
 
   // minimizes to tray when the window is closed

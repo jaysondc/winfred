@@ -21,9 +21,22 @@ export default function (app) {
   // create an empty results set
   let results = [];
 
-  // lookup files
-  co(function* refreshIndex() {
-    results = yield refresh(INDEX_PATHS);
+  // load from storage
+  app.getDb().getItem('file-search-index', (err, value) => {
+    if (!err && value && value.length) {
+      results = value;
+      console.log('LOADED FROM CACHE!');
+    } else {
+      // lookup files
+      co(function* refreshIndex() {
+        results = yield refresh(INDEX_PATHS);
+        app.getDb().setItem('file-search-index', results, setErr => {
+          if (!setErr) {
+            console.log('FILE SEARCH CACHED!');
+          }
+        });
+      });
+    }
   });
 
   app.createPlugin({

@@ -10,6 +10,8 @@ const winfred = {
   tray: null, // the tray instance
   pluginsPath: path.resolve(__dirname, 'plugins'), // the path to the plugins directory
   plugins: [], // an array of plugins
+  dataPath: path.resolve(__dirname, '.data'), // the path to the data directory
+  db: null, // the db instance
 };
 
 /**
@@ -101,6 +103,23 @@ winfred.setTray = tray => {
  * @return Tray
  */
 winfred.getTray = () => winfred.tray;
+
+
+/**
+ * Sets the database instance
+ *
+ * @param object db
+ */
+winfred.setDb = db => {
+  winfred.db = db;
+};
+
+/**
+ * Retrieves the database
+ *
+ * @return object
+ */
+winfred.getDb = () => winfred.db;
 
 
 // Plugin API
