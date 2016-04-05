@@ -82,10 +82,6 @@ export default function main(appContext) {
 
     // connects the main stub
     ipc.connect(appContext);
-
-    // load the index.html
-    const indexFile = path.resolve(__dirname, '..', 'index.html');
-    mainWindow.loadURL(`file://${indexFile}`);
   });
 
   // unregister all shortcuts
@@ -94,5 +90,11 @@ export default function main(appContext) {
   // minimizes to tray when the window is closed
   app.on('window-all-closed', () => {
     mainWindow = null;
+  });
+
+  app.on('bundle-is-ready', () => {
+    // load the index.html
+    const indexFile = path.resolve(__dirname, '..', 'index.html');
+    mainWindow.loadURL(`file://${indexFile}`);
   });
 }

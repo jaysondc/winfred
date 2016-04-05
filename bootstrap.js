@@ -4,6 +4,7 @@
 require('babel-register');
 require('babel-polyfill');
 const appIndex = require('./app').default;
+const electronApp = require('electron').app;
 const logger = require('./app/utils/logger').default;
 
 // load env
@@ -35,8 +36,13 @@ if (process.env.NODE_ENV === "development") {
     // start server
     app.listen(4000, (err, result) => {
       logger.info('HMR running on port 4000.');
+      // emit the message to the app
+      electronApp.emit('bundle-is-ready');
     });
   });
+} else {
+  // don't need to wait for compilation, emit the message to app
+  electronApp.emit('bundle-is-ready');
 }
 
 // start the app!
