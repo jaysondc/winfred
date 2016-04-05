@@ -1,10 +1,10 @@
 /*eslint-disable*/
 
 // wraps the main entry point into babel-register
-const debug = require('debug')('winfred');
 require('babel-register');
 require('babel-polyfill');
-require('./main');
+const appIndex = require('./app').default;
+const logger = require('./app/utils/logger').default;
 
 // load env
 require('dotenv').load();
@@ -19,18 +19,25 @@ if (process.env.NODE_ENV === "development") {
   const compiler = webpack(config);
   const app = express();
 
-  // Attach webpack-dev-middleware and webpack-hot-middleware
-  app.use(webpackDevMiddleware(compiler, Object.assign({}, config, {
+  const webpackDevMiddlewareInstance = webpackDevMiddleware(compiler, Object.assign({}, config, {
     noInfo: true,
     publicPath: '/',
-  })));
+  }));
+
+  // Attach webpack-dev-middleware and webpack-hot-middleware
+  app.use(webpackDevMiddlewareInstance);
   app.use(webpackHotMiddleware(compiler));
 
   // expose the public path
   app.use(path.basename(config.output.path), express.static(config.output.path));
 
-  // start server
-  app.listen(4000, (err, result) => {
-    debug('HMR running on port 4000.');
-  })
+  webpackDevMiddlewareInstance.waitUntilValid(() => {
+    // start server
+    app.listen(4000, (err, result) => {
+      logger.info('HMR running on port 4000.');
+    });
+  });
 }
+
+// start the app!
+appIndex();

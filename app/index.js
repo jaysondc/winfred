@@ -1,6 +1,6 @@
 import path from 'path';
 import { cloneDeep } from 'lodash';
-import main from './app/main';
+import main from './main';
 
 // creates the winfred context
 const winfred = {
@@ -8,9 +8,9 @@ const winfred = {
   app: null, // the main app/process module
   mainWindow: null, // the BrowserWindow instance
   tray: null, // the tray instance
-  pluginsPath: path.resolve(__dirname, 'plugins'), // the path to the plugins directory
+  pluginsPath: path.resolve(__dirname, '..', 'plugins'), // the path to the plugins directory
   plugins: [], // an array of plugins
-  dataPath: path.resolve(__dirname, '.data'), // the path to the data directory
+  dataPath: path.resolve(__dirname, '..', '.data'), // the path to the data directory
   db: null, // the db instance
 };
 
@@ -133,5 +133,7 @@ winfred.createPlugin = (plugin) => {
 // Main Process Proxies
 winfred.getPath = (...args) => winfred.getApp().getPath(...args);
 
-// boot up the main process
-main(winfred);
+export default function appIndex() {
+  // boots up the main process
+  main(winfred);
+}

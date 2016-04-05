@@ -1,5 +1,4 @@
 import path from 'path';
-// import fuzzy from 'fuzzy';
 import readdirp from 'readdirp';
 import { filter, flatMap, flatten, max, values } from 'lodash';
 import extensions from './extensions';

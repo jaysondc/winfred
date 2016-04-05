@@ -4,6 +4,7 @@ import fuzzy from 'fuzzy';
 import { shell } from 'electron';
 import { cloneDeep } from 'lodash';
 import { refresh, reScore } from './search';
+import logger from '../../app/utils/logger';
 
 export default function (app) {
   const PLUGIN_NAME = 'File Search';
@@ -25,14 +26,14 @@ export default function (app) {
   app.getDb().getItem('file-search-index', (err, value) => {
     if (!err && value && value.length) {
       results = value;
-      console.log('LOADED FROM CACHE!');
+      logger.info('LOADED FROM CACHE!');
     } else {
       // lookup files
       co(function* refreshIndex() {
         results = yield refresh(INDEX_PATHS);
         app.getDb().setItem('file-search-index', results, setErr => {
           if (!setErr) {
-            console.log('FILE SEARCH CACHED!');
+            logger.info('FILE SEARCH CACHED!');
           }
         });
       });

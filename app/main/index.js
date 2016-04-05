@@ -1,13 +1,22 @@
 import path from 'path';
 import { isFunction } from 'lodash';
 import { app } from 'electron';
-import { globalShortcut } from 'electron';
 import { getPlugins } from '../utils/plugins';
-import { createWindow, toggleWindow, showWindow, hideWindow } from './window';
-import { registerGlobalShortcuts, unregisterAllShortcuts, registerShortcuts, unregisterShortcuts } from './shortcuts';
 import { createTray } from './tray';
 import { createDb } from './db';
 import ipc from './ipc';
+import {
+  createWindow,
+  toggleWindow,
+  showWindow,
+  hideWindow,
+} from './window';
+import {
+  registerGlobalShortcuts,
+  unregisterAllShortcuts,
+  registerShortcuts,
+  unregisterShortcuts,
+} from './shortcuts';
 
 /**
  * @param object appContext    The application context
