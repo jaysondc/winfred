@@ -1,5 +1,9 @@
 import { BrowserWindow } from 'electron';
-import { IPC_RELOAD_WEB_CONTENT } from '../const/ipc';
+import {
+  IPC_SEARCH_FOCUS_FIELD,
+  IPC_RELOAD_WEB_CONTENT,
+  IPC_RESET_SELECTED_ITEM,
+} from '../const/ipc';
 
 /**
  * Creates a new BrowserWindow instance
@@ -14,7 +18,7 @@ export function createWindow(width, height) {
     height,
     center: true,
     frame: false,
-    show: false,
+    show: true,
     minimizable: false,
     maximizable: false,
     resizable: true,
@@ -34,6 +38,8 @@ export function createWindow(width, height) {
  */
 export function collapseWindow(mainWindow) {
   mainWindow.setSize(this.size[0], this.size[1]);
+  // sends the signal to reset the selected index
+  mainWindow.webContents.send(IPC_RESET_SELECTED_ITEM);
 }
 
 /**
@@ -56,6 +62,8 @@ export function hideWindow(mainWindow) {
   mainWindow.hide();
   // collapses the window
   collapseWindow.bind(this)(mainWindow);
+  // sends the signal to reset the selected index
+  mainWindow.webContents.send(IPC_RESET_SELECTED_ITEM);
   // sends the signal to reload the web content
   mainWindow.webContents.send(IPC_RELOAD_WEB_CONTENT);
 }
@@ -68,6 +76,8 @@ export function hideWindow(mainWindow) {
  */
 export function showWindow(mainWindow) {
   mainWindow.show();
+  // sends the signal to focus on the field
+  mainWindow.webContents.send(IPC_SEARCH_FOCUS_FIELD);
 }
 
 /**

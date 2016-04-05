@@ -76,7 +76,8 @@
     "webpack": "^1.12.14",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.10.0",
-    "webpack-target-electron-renderer": "^0.4.0"
+    "webpack-target-electron-renderer": "^0.4.0",
+    "winston": "^2.2.0"
   },
   "scripts": {
     "lint": "eslint app",

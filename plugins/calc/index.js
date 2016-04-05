@@ -22,7 +22,7 @@ export default function (app) {
           }
         }
       } catch (err) {
-        console.error(err);
+        // do nothing...
       }
       return results;
     },

@@ -3,6 +3,7 @@ export const UPDATE_QUERY = 'UPDATE_QUERY';
 export const RESET_QUERY = 'RESET_QUERY';
 export const UPDATE_RESULTS = 'UPDATE_RESULTS';
 export const RESET_RESULTS = 'RESET_RESULTS';
+export const RESET_SELECTED_ITEM = 'RESET_SELECTED_ITEM';
 export const SELECT_PREVIOUS_ITEM = 'SELECT_PREVIOUS_ITEM';
 export const SELECT_NEXT_ITEM = 'SELECT_NEXT_ITEM';
 export const SELECT_ITEM = 'SELECT_ITEM';
@@ -22,6 +23,10 @@ export function updateResults(results) {
 
 export function resetResults() {
   return { type: RESET_RESULTS };
+}
+
+export function resetSelectedItem() {
+  return { type: RESET_SELECTED_ITEM };
 }
 
 export function selectPreviousItem() {

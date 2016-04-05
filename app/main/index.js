@@ -4,14 +4,10 @@ import { app } from 'electron';
 import { globalShortcut } from 'electron';
 import { getPlugins } from '../utils/plugins';
 import { createWindow, toggleWindow, showWindow, hideWindow } from './window';
+import { registerGlobalShortcuts, unregisterAllShortcuts, registerShortcuts, unregisterShortcuts } from './shortcuts';
 import { createTray } from './tray';
 import { createDb } from './db';
 import ipc from './ipc';
-import {
-  IPC_RESULT_PREVIOUS_ITEM,
-  IPC_RESULT_NEXT_ITEM,
-  IPC_RESULT_EXECUTE_ITEM,
-} from '../const/ipc';
 
 /**
  * @param object appContext    The application context
@@ -36,9 +32,6 @@ export default function main(appContext) {
     return;
   }
 
-  // connects the main stub
-  ipc.connect(appContext);
-
   // load plugins
   const stream = getPlugins(appContext.pluginsPath);
   stream.on('data', (entry) => {
@@ -51,37 +44,43 @@ export default function main(appContext) {
   });
 
   app.on('ready', () => {
-    // create the window object
+    // creates the window, tray, and db instances
     mainWindow = createWindow.bind(appContext)(appContext.size[0], appContext.size[1]);
-    const mwc = mainWindow.webContents;
-
-    // register the default key bindings
-    globalShortcut.register('alt+space', toggleWindow.bind(appContext, mainWindow));
-    globalShortcut.register('esc', hideWindow.bind(appContext, mainWindow));
-    globalShortcut.register('up', () => { mwc.send(IPC_RESULT_PREVIOUS_ITEM); });
-    globalShortcut.register('down', () => { mwc.send(IPC_RESULT_NEXT_ITEM); });
-    globalShortcut.register('enter', () => { mwc.send(IPC_RESULT_EXECUTE_ITEM); });
-
-    // creates a tray
     tray = createTray(path.resolve(__dirname, '..', 'icon.png'));
-    tray.on('click', toggleWindow.bind(appContext, mainWindow));
-
-    // create the db
     db = createDb(appContext.dataPath);
 
-    // load the index.html
-    const indexFile = path.resolve(__dirname, '..', 'index.html');
-    mainWindow.loadURL(`file://${indexFile}`);
+    // register the global shortcut
+    registerGlobalShortcuts.bind(appContext)(mainWindow);
+     // window "show" event doesn't get called initially
+    registerShortcuts.bind(appContext)(mainWindow);
+
+    // register main window shortcuts
+    mainWindow.on('show', registerShortcuts.bind(appContext, mainWindow));
+    mainWindow.on('focus', registerShortcuts.bind(appContext, mainWindow));
+    mainWindow.on('hide', unregisterShortcuts.bind(appContext, mainWindow));
+    mainWindow.on('blur', unregisterShortcuts.bind(appContext, mainWindow));
 
     // hides the window on blur
-    mainWindow.on('blur', () => hideWindow.bind(appContext, mainWindow));
+    mainWindow.on('blur', hideWindow.bind(appContext, mainWindow));
+    // toggles the main window
+    tray.on('click', toggleWindow.bind(appContext, mainWindow));
 
     // set to app context
     appContext.setApp(app);
     appContext.setMainWindow(mainWindow);
     appContext.setTray(tray);
     appContext.setDb(db);
+
+    // connects the main stub
+    ipc.connect(appContext);
+
+    // load the index.html
+    const indexFile = path.resolve(__dirname, '..', 'index.html');
+    mainWindow.loadURL(`file://${indexFile}`);
   });
+
+  // unregister all shortcuts
+  app.on('will-quit', unregisterAllShortcuts.bind(appContext, mainWindow));
 
   // minimizes to tray when the window is closed
   app.on('window-all-closed', () => {

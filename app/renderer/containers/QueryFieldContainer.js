@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import ipc from '../ipc';
+import { IPC_SEARCH_FOCUS_FIELD } from '../../const/ipc';
 
 const styles = {
   base: {
@@ -10,11 +12,17 @@ const styles = {
     lineHeight: '35px',
     fontWeight: 'normal',
     outline: '0px',
+    padding: '15px',
+    boxSizing: 'border-box',
   },
 };
 
 const QueryFieldContainer = class QueryFieldContainer extends Component {
   componentDidMount() {
+    // register ipc event
+    ipc.on(IPC_SEARCH_FOCUS_FIELD, () => {
+      this.q.focus();
+    });
     if (this.q !== null) {
       this.q.focus();
     }

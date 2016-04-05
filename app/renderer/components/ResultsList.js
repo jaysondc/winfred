@@ -3,11 +3,15 @@ import ResultItemContainer from '../containers/ResultItemContainer';
 
 const styles = {
   base: {
-    marginLeft: '0px',
+    margin: '0px',
+    height: '500px',
     paddingLeft: '15px',
     paddingRight: '15px',
     listStyleType: 'none',
     fontFamily: 'Helvetica, Arial, sans-serif',
+    overflowX: 'hidden',
+    overflowY: 'scroll',
+    boxSizing: 'border-box',
   },
 };
 
